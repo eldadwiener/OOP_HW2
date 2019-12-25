@@ -39,12 +39,22 @@ public class Node<T> {
 	private Map<T,T> ingoingEdges = new HashMap<>();
 	private Map<T,T> outgoingEdges = new HashMap<>();
 
+	/**
+	 * @modifies this
+	 * @effects creates a new node with label = id, of type = type containing the object obj
+	 */
 	public Node(T id, NodeType type, Object obj) {
 		this.type = type;
 		this.id = id;
 		object = obj;
 	}
 	
+	/**
+	 * @modifies this
+	 * @effects inserts an edge from this node to the node with id childId.
+	 * 			if an edge to childId, or a child edge with edgeId already exists, no edge will be added.
+	 * @return true if the edge was added, otherwise false.
+	 */
 	public boolean insertChildEdge(T edgeId, T childId) {
 		if ( ingoingEdges.containsKey(edgeId) || ingoingEdges.containsValue(childId) ) {
 			return false;
@@ -53,6 +63,12 @@ public class Node<T> {
 		return true;
 	}
 	
+	/**
+	 * @modifies this
+	 * @effects inserts an edge from the node with id parentId, to this node.
+	 * 			if an edge to parentId, or a parent edge with edgeId already exists, no edge will be added.
+	 * @return true if the edge was added, otherwise false.
+	 */
 	public boolean insertParentEdge(T edgeId, T parentId) {
 		if ( outgoingEdges.containsKey(edgeId) || outgoingEdges.containsValue(parentId)) {
 			return false;
@@ -61,6 +77,10 @@ public class Node<T> {
 		return true;
 	}
 
+	/**
+	 * @modifies this
+	 * @effects removes outgoing edge from this to childId if such edge exists.
+	 */
 	public void removeChild(T childId) {
 		for (Map.Entry<T, T> child : outgoingEdges.entrySet()) {
 			if (child.getValue().equals(childId)) {
@@ -70,6 +90,10 @@ public class Node<T> {
 		}
 	}
 
+	/**
+	 * @modifies this
+	 * @effects removes in going edge from parentId to this if such edge exists.
+	 */
 	public void removeParent(T parentId) {
 		for (Map.Entry<T, T> parent : ingoingEdges.entrySet()) {
 			if (parent.getValue().equals(parentId)) {
@@ -79,51 +103,94 @@ public class Node<T> {
 		}
 	}
 
+	/** TODO: add documentation
+	 * @modifies
+	 * @effects 
+	 * @return 
+	 */
 	public void removeChildEdge(T edgeId) {
 		ingoingEdges.remove(edgeId);
 	}
 
+	/** TODO: add documentation
+	 * @modifies
+	 * @effects 
+	 * @return 
+	 */
 	public void removeParentEdge(T edgeId) {
 		outgoingEdges.remove(edgeId);
 	}
 
+	/**
+	 * @return The object that this node contains.
+	 */
 	public Object getObject() {
 		return object;
 	}
 	
+	/**
+	 * @return id of this node.
+	 */
 	public T getId() {
 		return id;
 	}
 
+	/**
+	 * @return type of this node.
+	 */
 	public NodeType getType() {
 		return type;
 	}
 
+	/**
+	 * @return list of all child nodes of this.
+	 */
 	public Collection<T> getAllChildren() {
 		return outgoingEdges.values();
 	}
 
+	/**
+	 * @return list of all parent nodes of this.
+	 */
 	public Collection<T> getAllParents() {
 		return ingoingEdges.values();
 	}
 	
 	// TODO: what if edgeId is NULL?
+	/**
+	 * @return nodeId of child node connected by edgeId to this
+	 * 		   or null if no such edge exists.
+	 */
 	public T getChildByEdge(T edgeId) {
 		return outgoingEdges.get(edgeId);
 	}
 	
+	/**
+	 * @return nodeId of parent node connected by edgeId to this
+	 * 		   or null if no such edge exists.
+	 */
 	public T getParentByEdge(T edgeId) {
 		return ingoingEdges.get(edgeId);
 	}
 	
+	/**
+	 * @return true if nodeId is a child node of this, otherwise false.
+	 */
 	public boolean isChild(T nodeId) {
 		return outgoingEdges.containsValue(nodeId);
 	}
 	
+	/**
+	 * @return true if nodeId is a parent node of this, otherwise false.
+	 */
 	public boolean isParent(T nodeId) {
 		return ingoingEdges.containsValue(nodeId);
 	}
 
+	/**
+	 * @effects check if obj is equal to this (same nodeId)
+	 * @return true if they are equal, otherwise false.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Node<?>) {
@@ -134,6 +201,10 @@ public class Node<T> {
 		return false;
 	}
 	
+	/**
+	 * @effects calculate hashCode of this object, by its id.
+	 * @return hash value of this.
+	 */
 	@Override
 	public int hashCode() {
 		return id.hashCode();

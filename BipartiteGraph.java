@@ -46,9 +46,13 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * @modifies this, srcNode and dstNode objects
-	 * @effects 
-	 * @return
+	 * @modifies this
+	 * @effects adds an edge with id edgeId from srcNodeId to dstNodeId
+	 * 			if an edge from the source node to the destination node exists already,
+	 * 			or if edgeId was already used in an edge outgoing from source, or incoming to destination,
+	 * 			then the edge will not be added.
+	 * @return true if the edge was added,
+	 * 		   false if the edge was not added.
 	 */
 	public boolean addEdge (T edgeId, T srcNodeId, T dstNodeId) {
 		checkRep();
@@ -81,10 +85,8 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * @requires
-	 * @modifies 
-	 * @effects
-	 * @return
+	 * @effects check if the graph contains an edge from srcNode to dstNode.
+	 * @return true if the edge exists, otherwise false.
 	 */
 	public boolean containsEdge (T srcNodeId, T dstNodeId) {
 		checkRep();
@@ -96,10 +98,8 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * @requires
-	 * @modifies 
-	 * @effects
-	 * @return
+	 * @effects check if the graph contains a node with id nodeId.
+	 * @return true if the node exists, false otherwise.
 	 */
 	public boolean containsNode (T nodeId) {
 		checkRep();
@@ -107,21 +107,22 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * @requires
-	 * @modifies 
-	 * @effects
-	 * @return
+	 * @effects if the graph contains a node with id nodeId, returns the object it contains.
+	 * @return object of the node with id nodeId, or null if no such node exists.
 	 */
 	public Object getNodeObj (T nodeId) {
 		checkRep();
-		return nodes.get(nodeId).getObject();
+		Node<T> node = nodes.get(nodeId);
+		if (node == null) {
+			return null;
+		}
+		return node.getObject();
 	}
 	
 	/**
-	 * @requires
-	 * @modifies 
-	 * @effects
-	 * @return
+	 * @modifies this
+	 * @effects removes the node with id nodeId from the graph,
+	 * 			and all of it's outgoing and in going edges.
 	 */
 	public void removeNode (T nodeId) {
 		checkRep();
@@ -148,10 +149,8 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * @requires
-	 * @modifies 
-	 * @effects
-	 * @return
+	 * @modifies this
+	 * @effects remove the edge between the source and destination nodes if one exists.
 	 */
 	public void removeEdge (T srcNodeId, T dstNodeId) {
 		checkRep();
@@ -166,10 +165,8 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	}
 	
 	/**
-	 * @requires
-	 * @modifies 
-	 * @effects
-	 * @return
+	 * @effects get a list of all node id's in the graph with type "type"
+	 * @return list of node id's
 	 */
 	public List<T> getNodesByType(Node.NodeType type) {
 		checkRep();
