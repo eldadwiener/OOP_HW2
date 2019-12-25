@@ -16,7 +16,7 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	
 	// Abs. Function:
 	// represents a BipartiteGraph with:
-	//		black nodes and white nodes, with: {id, object and edges list} at nodes list
+	//		black nodes and white nodes, with: {id, object and edges list} at this.nodes list
 	//		where the entry.key = nodeId, and entry.value = node
 	// Rep. Invariant:
 	// for every <key,value> couple in nodes:
