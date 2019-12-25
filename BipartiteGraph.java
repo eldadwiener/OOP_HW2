@@ -14,6 +14,18 @@ import java.util.Map;
  */
 public class BipartiteGraph<T extends Comparable<T>> {
 	
+	// Abs. Function:
+	// represents a BipartiteGraph with:
+	//		black nodes and white nodes, with: {id, object and edges list} at nodes list
+	//		where the entry.key = nodeId, and entry.value = node
+	// Rep. Invariant:
+	// for every <key,value> couple in nodes:
+	// 		key != null, value != null
+	//		unique id for every node
+	//		value.type != value.parent.type for every parent
+	//		value.type != value.children.type for every children
+	//		for every nodes a,b: a is in b.parents iff b in a.children
+	
 	private Map<T,Node<T>> nodes = new HashMap<>();
 	
 	/**
@@ -24,10 +36,12 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	 * 		   false otherwise.
 	 */
 	public boolean addNode (T nodeId, Node.NodeType type, Object obj) {
+		checkRep();
 		if ( nodes.containsKey(nodeId)) {
 			return false;
 		}
 		nodes.put(nodeId, new Node<T>(nodeId, type,obj));
+		checkRep();
 		return true;
 	}
 	
@@ -37,25 +51,31 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	 * @return
 	 */
 	public boolean addEdge (T edgeId, T srcNodeId, T dstNodeId) {
+		checkRep();
 		Node<T> srcNode = nodes.get(srcNodeId);
 		Node<T> dstNode = nodes.get(dstNodeId);
 		if (srcNode == null || dstNode == null) {
+			checkRep();
 			return false;
 		}
 		// both nodes exist, make sure they are of different types
 		if ( srcNode.getType() == dstNode.getType() ) {
+			checkRep();
 			return false;
 		}
 		// types are different, try adding the edge to both sides
 		if ( !srcNode.insertChildEdge(edgeId, dstNodeId) ) {
+			checkRep();
 			return false;
 		}
 		
 		if ( !dstNode.insertParentEdge(edgeId, srcNodeId) ) {
 			// failed to add to destination, remove new edge from source
 			srcNode.removeChildEdge(edgeId);
+			checkRep();
 			return false;
 		}
+		checkRep();
 		// managed to add the edge on both sides, so it is a legal edge
 		return true;
 	}
@@ -67,6 +87,7 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	 * @return
 	 */
 	public boolean containsEdge (T srcNodeId, T dstNodeId) {
+		checkRep();
 		Node<T> srcNode = nodes.get(srcNodeId);
 		if (srcNode != null) {
 			return srcNode.isChild(dstNodeId);
@@ -81,6 +102,7 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	 * @return
 	 */
 	public boolean containsNode (T nodeId) {
+		checkRep();
 		return nodes.containsKey(nodeId);
 	}
 	
@@ -91,6 +113,7 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	 * @return
 	 */
 	public Object getNodeObj (T nodeId) {
+		checkRep();
 		return nodes.get(nodeId).getObject();
 	}
 	
@@ -101,6 +124,7 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	 * @return
 	 */
 	public void removeNode (T nodeId) {
+		checkRep();
 		Node<T> removedNode = nodes.get(nodeId);
 		if (removedNode == null) {
 			return;
@@ -120,6 +144,7 @@ public class BipartiteGraph<T extends Comparable<T>> {
 		
 		// done cleaning up, remove the node
 		nodes.remove(nodeId);
+		checkRep();
 	}
 	
 	/**
@@ -129,6 +154,7 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	 * @return
 	 */
 	public void removeEdge (T srcNodeId, T dstNodeId) {
+		checkRep();
 		Node<T> srcNode = nodes.get(srcNodeId);
 		Node<T> dstNode = nodes.get(dstNodeId);
 		if (srcNode == null || dstNode == null) {
@@ -136,6 +162,7 @@ public class BipartiteGraph<T extends Comparable<T>> {
 		}
 		srcNode.removeChild(dstNodeId);
 		dstNode.removeParent(srcNodeId);
+		checkRep();
 	}
 	
 	/**
@@ -145,12 +172,39 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	 * @return
 	 */
 	public List<T> getNodesByType(Node.NodeType type) {
+		checkRep();
 		List<T> nodesList = new ArrayList<>();
 		for (Map.Entry<T, Node<T>> entry : nodes.entrySet()) {
 			if (entry.getValue().getType() == type) {
 				nodesList.add(entry.getKey());
 			}
 		}
+		checkRep();
 		return nodesList;
+	}
+	
+	private void checkRep() {
+		for (Map.Entry<T, Node<T>> entry : nodes.entrySet()) {
+			//check for: "key != null, value != null"
+			assert entry.getKey() != null : "entry.getKey() == null";
+			Node<T> checkedNode = entry.getValue();
+			assert checkedNode != null : "checkedNode == null";
+			
+			//check for: for every nodes a,b: a is in b.parents iff b in a.children
+			
+			//check for: value.type != value.parent.type for every parent
+			Collection <T> childs = checkedNode.getAllChildren();
+			for (T nodeId : childs) {
+				assert nodes.get(nodeId).getType() != checkedNode.getType() : "children type = parent type (not a BipartiteGraph)";
+				assert nodes.get(nodeId).isChild(checkedNode.getId()) : "missing edge between parent and child";
+			}
+
+			//check for: value.type != value.children.type for every children
+			Collection <T> parents = checkedNode.getAllParents();
+			for (T nodeId : parents) {
+				assert nodes.get(nodeId).getType() != checkedNode.getType() : "parent type = children type (not a BipartiteGraph)";
+				assert nodes.get(nodeId).isParent(checkedNode.getId()) : "missing edge between parent and child";
+			}
+		}
 	}
 }
