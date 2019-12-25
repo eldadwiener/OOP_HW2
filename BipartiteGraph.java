@@ -12,7 +12,7 @@ import java.util.Map;
  * Two edges with the same label cannot have the same source edge, or the same destination edge.
  * Every node has a color: BLACK/WHITES, an edge cannot directly connect nodes of the same color.
  */
-public class BipartiteGraph<T extends Comparable<T>> {
+public class BipartiteGraph<T> {
 	
 	// Abs. Function:
 	// represents a BipartiteGraph with:
@@ -26,6 +26,8 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	//		value.type != value.children.type for every children
 	//		for every nodes a,b: a is in b.parents iff b in a.children
 	
+	public enum NodeType{ BLACK, WHITE };
+	
 	private Map<T,Node<T>> nodes = new HashMap<>();
 	
 	/**
@@ -35,7 +37,7 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	 * @return true if the node was added.
 	 * 		   false otherwise.
 	 */
-	public boolean addNode (T nodeId, Node.NodeType type, Object obj) {
+	public boolean addNode (T nodeId, NodeType type, Object obj) {
 		checkRep();
 		if ( nodes.containsKey(nodeId)) {
 			return false;
@@ -168,7 +170,7 @@ public class BipartiteGraph<T extends Comparable<T>> {
 	 * @effects get a list of all node id's in the graph with type "type"
 	 * @return list of node id's
 	 */
-	public List<T> getNodesByType(Node.NodeType type) {
+	public List<T> getNodesByType(NodeType type) {
 		checkRep();
 		List<T> nodesList = new ArrayList<>();
 		for (Map.Entry<T, Node<T>> entry : nodes.entrySet()) {

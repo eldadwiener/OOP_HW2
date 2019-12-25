@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import homework2.BipartiteGraph.NodeType;
 
 /*
  * Implements a generic node for graph , consisting id, type (BLACK or WHITE) and lists for parents and children.
@@ -31,7 +32,6 @@ public class Node<T> {
 	//			entry1 == entry2
 	// 		and the same rule for outgoingEdges
 	
-	enum NodeType { BLACK, WHITE };
 
 	private final NodeType type;
 	private final T id;

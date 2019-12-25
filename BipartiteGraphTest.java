@@ -35,5 +35,33 @@ public class BipartiteGraphTest {
     
     //  TODO: Add black-box tests
     
+	@Test
+	public void test1() {
+        BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();
+		driver.createGraph("graph1");
+		driver.createGraph("graph2");
+		
+		// try adding nodes with same id
+        driver.addBlackNode("graph1", "b1");
+        driver.addWhiteNode("graph1", "b1");
+        // make sure only the black node was added
+        assertEquals("two nodes with same id", "", driver.listWhiteNodes("graph1"));
+        assertEquals("missing black node b1", "b1", driver.listBlackNodes("graph1"));
+        
+        
+        // try connecting two nodes of the same color
+        driver.addBlackNode("graph1", "b2");
+        driver.addWhiteNode("graph1", "w1");
+        driver.addWhiteNode("graph1", "w2");
+        driver.addEdge("graph1", "b1", "b2", "b2b");
+        driver.addEdge("graph1", "w1", "w2", "w2w");
+        assertEquals("edge between same color", "", driver.listChildren("graph1", "b1") );
+        assertEquals("edge between same color", "", driver.listChildren("graph1", "w1") );
+        
+        // make sure if edge1 is child of edge2, then edge2 is parent of edge1
+        driver.addEdge("graph1", "b1", "w1", "b2w");
+        assertEquals("Child-Parent relationship broken", "w1", driver.listChildren("graph1", "b1") );
+        assertEquals("Child-Parent relationship broken", "b1", driver.listParents("graph1", "w1") );
+	}
   
 }
