@@ -180,6 +180,70 @@ public class BipartiteGraph<T extends Comparable<T>> {
 		return nodesList;
 	}
 	
+	/**
+	 * @effects get a parent of a node (detected by edge label)
+	 * @return if (childName in nodes and childName is a dest for edgeLabel)
+	 * 			return the parent label, otherwise return null
+	 */
+	public T getParentByEdgeLabel(T childName, T edgeLabel) {
+		checkRep();
+		Node<T> node = nodes.get(childName);
+		if (node == null) {
+			checkRep();
+			return null;
+		}
+		checkRep();
+		return node.getParentByEdge(edgeLabel);
+	}
+
+	/**
+	 * @effects get a children of a node (detected by edge label)
+	 * @return if (parentName in nodes and parentName is a src for edgeLabel)
+	 * 			return the parent label, otherwise return null
+	 */
+	public T getChildByEdgeLabel(T parentName, T edgeLabel) {
+		checkRep();
+		Node<T> node = nodes.get(parentName);
+		if (node == null) {
+			checkRep();
+			return null;
+		}
+		checkRep();
+		return node.getChildByEdge(edgeLabel);
+	}
+
+	/**
+	 * @effects get a children labels list of a node (detected by parentName)
+	 * @return if (parentName in nodes)
+	 * 			return the children labels list , otherwise return null
+	 */
+	public Collection<T> getListChildren (T parentName){
+		checkRep();
+		Node<T> node = nodes.get(parentName);
+		if (node == null) {
+			checkRep();
+			return null;
+		}
+		checkRep();
+		return node.getAllChildren();
+	}
+	
+	/**
+	 * @effects get a parents labels list of a node (detected by childName)
+	 * @return if (childName in nodes)
+	 * 			return the parents labels list , otherwise return null
+	 */	
+	public Collection<T> getListParents (T childName){
+		checkRep();
+		Node<T> node = nodes.get(childName);
+		if (node == null) {
+			checkRep();
+			return null;
+		}
+		checkRep();
+		return node.getAllParents();
+	}
+	
 	private void checkRep() {
 		for (Map.Entry<T, Node<T>> entry : nodes.entrySet()) {
 			//check for: "key != null, value != null"

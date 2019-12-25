@@ -8,7 +8,7 @@ import java.util.*;
  */
 public class BipartiteGraphTestDriver {
 
-    private Map<String, BipartiteGraph<String>> graphs;
+    private Map<String, BipartiteGraph<String>> graphs= new HashMap<>();
 
     /**
      * @modifies this
@@ -16,7 +16,6 @@ public class BipartiteGraphTestDriver {
      */
     public BipartiteGraphTestDriver () {
     	// TODO: Implement this constructor
-       
        
     }
 
@@ -121,9 +120,17 @@ public class BipartiteGraphTestDriver {
      * 		   parentName in the graph graphName, in alphabetical order.
      */
     public String listChildren(String graphName, String parentName) {
-    	//TODO: Implement this method
-    	
-    	
+    	BipartiteGraph<String> graph = graphs.get(graphName);
+    	//TODO check for null?
+    	Collection<String> children = graph.getListChildren(parentName);
+    	String childrenStr = new String();
+    	for (String child : children) {
+    		childrenStr.concat(child + "-");
+    	}
+    	if (childrenStr.length() == 0) {//empty string, no children
+    		return childrenStr;
+    	}
+    	return childrenStr.substring(0, childrenStr.length() - 1);
     }
 
     
@@ -133,9 +140,17 @@ public class BipartiteGraphTestDriver {
      * 		   childName in the graph graphName, in alphabetical order.
      */
     public String listParents(String graphName, String childName) {
-    	//TODO: Implement this method
-    	
-    	
+       	BipartiteGraph<String> graph = graphs.get(graphName);
+    	//TODO check for null?
+    	Collection<String> parents = graph.getListParents(childName);
+    	String parentsStr = new String();
+    	for (String parent : parents) {
+    		parentsStr.concat(parent + "-");
+    	}
+    	if (parentsStr.length() == 0) {//empty string, no children
+    		return parentsStr;
+    	}
+    	return parentsStr.substring(0, parentsStr.length() - 1);
     }
 
     
@@ -147,9 +162,9 @@ public class BipartiteGraphTestDriver {
      */
     public String getChildByEdgeLabel(String graphName, String parentName,
     								   String edgeLabel) {
-    	//TODO: Implement this method
-    	
-    	
+    	BipartiteGraph<String> graph = graphs.get(graphName);
+    	//TODO check for null?
+    	return graph.getChildByEdgeLabel(parentName, edgeLabel);
     }
 
     
@@ -161,8 +176,8 @@ public class BipartiteGraphTestDriver {
      */
     public String getParentByEdgeLabel(String graphName, String childName,
     									String edgeLabel) {
-    	//TODO: Implement this method
-    	
-    	
+    	BipartiteGraph<String> graph = graphs.get(graphName);
+    	//TODO check for null?
+    	return graph.getParentByEdgeLabel(childName, edgeLabel);
     }
 }
