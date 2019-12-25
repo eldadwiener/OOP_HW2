@@ -1,6 +1,8 @@
 package homework2;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BipartiteGraph<T extends Comparable<T>> {
@@ -74,4 +76,13 @@ public class BipartiteGraph<T extends Comparable<T>> {
 		dstNode.removeParent(srcNodeId);
 	}
 	
+	public List<Node<T>> getNodesByType(Node.NodeType type) {
+		List<Node<T>> nodesList = new ArrayList<>();
+		for (Map.Entry<T, Node<T>> entry : nodes.entrySet()) {
+			if (entry.getValue().getType() == type) {
+				nodesList.add(entry.getValue());
+			}
+		}
+		return nodesList;
+	}
 }
