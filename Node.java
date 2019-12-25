@@ -47,6 +47,7 @@ public class Node<T> {
 		this.type = type;
 		this.id = id;
 		object = obj;
+		checkRep();
 	}
 	
 	/**
@@ -56,10 +57,13 @@ public class Node<T> {
 	 * @return true if the edge was added, otherwise false.
 	 */
 	public boolean insertChildEdge(T edgeId, T childId) {
+		checkRep();
 		if ( ingoingEdges.containsKey(edgeId) || ingoingEdges.containsValue(childId) ) {
+			checkRep();
 			return false;
 		}
 		ingoingEdges.put(edgeId, childId);
+		checkRep();
 		return true;
 	}
 	
@@ -70,10 +74,13 @@ public class Node<T> {
 	 * @return true if the edge was added, otherwise false.
 	 */
 	public boolean insertParentEdge(T edgeId, T parentId) {
+		checkRep();
 		if ( outgoingEdges.containsKey(edgeId) || outgoingEdges.containsValue(parentId)) {
+			checkRep();
 			return false;
 		}
 		outgoingEdges.put(edgeId, parentId);
+		checkRep();
 		return true;
 	}
 
@@ -82,12 +89,15 @@ public class Node<T> {
 	 * @effects removes outgoing edge from this to childId if such edge exists.
 	 */
 	public void removeChild(T childId) {
+		checkRep();
 		for (Map.Entry<T, T> child : outgoingEdges.entrySet()) {
 			if (child.getValue().equals(childId)) {
 				outgoingEdges.remove(child.getKey());
+				checkRep();
 				return;
 			}
 		}
+		checkRep();
 	}
 
 	/**
@@ -95,12 +105,15 @@ public class Node<T> {
 	 * @effects removes in going edge from parentId to this if such edge exists.
 	 */
 	public void removeParent(T parentId) {
+		checkRep();
 		for (Map.Entry<T, T> parent : ingoingEdges.entrySet()) {
 			if (parent.getValue().equals(parentId)) {
 				ingoingEdges.remove(parent.getKey());
+				checkRep();
 				return;
 			}
 		}
+		checkRep();
 	}
 
 	/** TODO: add documentation
@@ -109,7 +122,9 @@ public class Node<T> {
 	 * @return 
 	 */
 	public void removeChildEdge(T edgeId) {
+		checkRep();
 		ingoingEdges.remove(edgeId);
+		checkRep();
 	}
 
 	/** TODO: add documentation
@@ -118,13 +133,16 @@ public class Node<T> {
 	 * @return 
 	 */
 	public void removeParentEdge(T edgeId) {
+		checkRep();
 		outgoingEdges.remove(edgeId);
+		checkRep();
 	}
 
 	/**
 	 * @return The object that this node contains.
 	 */
 	public Object getObject() {
+		checkRep();
 		return object;
 	}
 	
@@ -132,6 +150,7 @@ public class Node<T> {
 	 * @return id of this node.
 	 */
 	public T getId() {
+		checkRep();
 		return id;
 	}
 
@@ -139,6 +158,7 @@ public class Node<T> {
 	 * @return type of this node.
 	 */
 	public NodeType getType() {
+		checkRep();
 		return type;
 	}
 
@@ -146,6 +166,7 @@ public class Node<T> {
 	 * @return list of all child nodes of this.
 	 */
 	public Collection<T> getAllChildren() {
+		checkRep();
 		return outgoingEdges.values();
 	}
 
@@ -153,6 +174,7 @@ public class Node<T> {
 	 * @return list of all parent nodes of this.
 	 */
 	public Collection<T> getAllParents() {
+		checkRep();
 		return ingoingEdges.values();
 	}
 	
@@ -162,6 +184,7 @@ public class Node<T> {
 	 * 		   or null if no such edge exists.
 	 */
 	public T getChildByEdge(T edgeId) {
+		checkRep();
 		return outgoingEdges.get(edgeId);
 	}
 	
@@ -170,6 +193,7 @@ public class Node<T> {
 	 * 		   or null if no such edge exists.
 	 */
 	public T getParentByEdge(T edgeId) {
+		checkRep();
 		return ingoingEdges.get(edgeId);
 	}
 	
@@ -177,6 +201,7 @@ public class Node<T> {
 	 * @return true if nodeId is a child node of this, otherwise false.
 	 */
 	public boolean isChild(T nodeId) {
+		checkRep();
 		return outgoingEdges.containsValue(nodeId);
 	}
 	
@@ -184,6 +209,7 @@ public class Node<T> {
 	 * @return true if nodeId is a parent node of this, otherwise false.
 	 */
 	public boolean isParent(T nodeId) {
+		checkRep();
 		return ingoingEdges.containsValue(nodeId);
 	}
 
@@ -193,11 +219,14 @@ public class Node<T> {
 	 */
 	@Override
 	public boolean equals(Object obj) {
+		checkRep();
 		if (obj instanceof Node<?>) {
 			if (((Node<?>)obj).id == id) {
+				checkRep();
 				return true;
 			}
 		}
+		checkRep();
 		return false;
 	}
 	
@@ -207,6 +236,7 @@ public class Node<T> {
 	 */
 	@Override
 	public int hashCode() {
+		checkRep();
 		return id.hashCode();
 	}
 	
