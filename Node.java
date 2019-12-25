@@ -58,11 +58,11 @@ public class Node<T> {
 	 */
 	public boolean insertChildEdge(T edgeId, T childId) {
 		checkRep();
-		if ( ingoingEdges.containsKey(edgeId) || ingoingEdges.containsValue(childId) ) {
+		if ( outgoingEdges.containsKey(edgeId) || outgoingEdges.containsValue(childId) ) {
 			checkRep();
 			return false;
 		}
-		ingoingEdges.put(edgeId, childId);
+		outgoingEdges.put(edgeId, childId);
 		checkRep();
 		return true;
 	}
@@ -75,11 +75,11 @@ public class Node<T> {
 	 */
 	public boolean insertParentEdge(T edgeId, T parentId) {
 		checkRep();
-		if ( outgoingEdges.containsKey(edgeId) || outgoingEdges.containsValue(parentId)) {
+		if ( ingoingEdges.containsKey(edgeId) || ingoingEdges.containsValue(parentId)) {
 			checkRep();
 			return false;
 		}
-		outgoingEdges.put(edgeId, parentId);
+		ingoingEdges.put(edgeId, parentId);
 		checkRep();
 		return true;
 	}
@@ -123,7 +123,7 @@ public class Node<T> {
 	 */
 	public void removeChildEdge(T edgeId) {
 		checkRep();
-		ingoingEdges.remove(edgeId);
+		outgoingEdges.remove(edgeId);
 		checkRep();
 	}
 
@@ -134,7 +134,7 @@ public class Node<T> {
 	 */
 	public void removeParentEdge(T edgeId) {
 		checkRep();
-		outgoingEdges.remove(edgeId);
+		ingoingEdges.remove(edgeId);
 		checkRep();
 	}
 

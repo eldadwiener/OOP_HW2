@@ -259,14 +259,14 @@ public class BipartiteGraph<T> {
 			Collection <T> childs = checkedNode.getAllChildren();
 			for (T nodeId : childs) {
 				assert nodes.get(nodeId).getType() != checkedNode.getType() : "children type = parent type (not a BipartiteGraph)";
-				assert nodes.get(nodeId).isChild(checkedNode.getId()) : "missing edge between parent and child";
+				assert nodes.get(nodeId).isParent(checkedNode.getId()) : "missing edge between parent and child";
 			}
 
 			//check for: value.type != value.children.type for every children
 			Collection <T> parents = checkedNode.getAllParents();
 			for (T nodeId : parents) {
 				assert nodes.get(nodeId).getType() != checkedNode.getType() : "parent type = children type (not a BipartiteGraph)";
-				assert nodes.get(nodeId).isParent(checkedNode.getId()) : "missing edge between parent and child";
+				assert nodes.get(nodeId).isChild(checkedNode.getId()) : "missing edge between parent and child";
 			}
 		}
 	}

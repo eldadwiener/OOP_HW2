@@ -110,7 +110,7 @@ public class BipartiteGraphTestDriver {
      */
     public String listWhiteNodes(String graphName) {
     	BipartiteGraph<String> graph = graphs.get(graphName);
-    	List<String> whiteNodes = graph.getNodesByType(NodeType.BLACK);
+    	List<String> whiteNodes = graph.getNodesByType(NodeType.WHITE);
     	Collections.sort(whiteNodes);
     	return String.join(" ", whiteNodes);
     }
@@ -123,15 +123,9 @@ public class BipartiteGraphTestDriver {
      */
     public String listChildren(String graphName, String parentName) {
     	BipartiteGraph<String> graph = graphs.get(graphName);
-    	Collection<String> children = graph.getListChildren(parentName);
-    	String childrenStr = new String();
-    	for (String child : children) {
-    		childrenStr.concat(child + "-");
-    	}
-    	if (childrenStr.length() == 0) {//empty string, no children
-    		return childrenStr;
-    	}
-    	return childrenStr.substring(0, childrenStr.length() - 1);
+    	List<String> childrenList = new ArrayList<>(graph.getListChildren(parentName));
+    	Collections.sort(childrenList);
+    	return String.join(" ", childrenList);
     }
 
     
@@ -142,15 +136,9 @@ public class BipartiteGraphTestDriver {
      */
     public String listParents(String graphName, String childName) {
        	BipartiteGraph<String> graph = graphs.get(graphName);
-    	Collection<String> parents = graph.getListParents(childName);
-    	String parentsStr = new String();
-    	for (String parent : parents) {
-    		parentsStr.concat(parent + "-");
-    	}
-    	if (parentsStr.length() == 0) {//empty string, no children
-    		return parentsStr;
-    	}
-    	return parentsStr.substring(0, parentsStr.length() - 1);
+    	List<String> parentsList = new ArrayList<>(graph.getListParents(childName));
+    	Collections.sort(parentsList);
+    	return String.join(" ", parentsList);
     }
 
     
