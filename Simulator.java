@@ -1,5 +1,7 @@
 package homework2;
 
+import homework2.BipartiteGraph.NodeType;
+
 public class Simulator<T, Sim extends Simulatable<T>> {
 	
 	private BipartiteGraph<T> graph;
@@ -25,23 +27,59 @@ public class Simulator<T, Sim extends Simulatable<T>> {
 		return false;
 	}
 	
-	public boolean removePipe(T pipeId) {
-		return false;
+	/**
+	 * @modified this
+	 * @effects  remove the pipe with pipeId label (if exist)
+	 */
+	public void removePipe(T pipeId) {
+		if (graph.getNodesByType(NodeType.BLACK).contains(pipeId)) {
+			graph.removeNode(pipeId);
+		}
 	}
 
-	public boolean removeFIlter(T filterId) {
-		return false;
+	/**
+	 * @modified this
+	 * @effects  remove the filter with filterId label (if exist)
+	 */
+	public void removeFIlter(T filterId) {
+		if (graph.getNodesByType(NodeType.WHITE).contains(filterId)) {
+			graph.removeNode(filterId);
+		}
 	}
 	
-	public boolean disconnect(T srcId, T dstId) {
-		return false;
+	/**
+	 * @modified this
+	 * @effects if srcId and dstId are connected by edge, remove the edge
+	 */
+	public void disconnect(T srcId, T dstId) {
+		graph.removeEdge(srcId, dstId);;
 	}
-	
-	public Sim getPipeObject(T pipeId) {
+
+	/**
+ 	* @effects get the object of specific pipe
+ 	* @return if (pipeId not in pipes set or object not extends Simulatable) -null, otherwise the pipe's object
+ 	*/
+	public Simulatable<?> getPipeObject(T pipeId) {
+		if (graph.getNodesByType(NodeType.BLACK).contains(pipeId)) {
+			Object nodeObj = graph.getNodeObj(pipeId);
+			if (nodeObj instanceof Simulatable<?>) {
+            	return ( Simulatable<?>)nodeObj;
+			}
+		}
 		return null;
 	}
 
-	public Sim getFilterObject(T filterId) {
+	/**
+	* @effects get the object of specific filter
+	* @return if (filterId not in filters set or object not extends Simulatable) -null, otherwise the filter's object
+	*/
+	public Simulatable<?> getFilterObject(T filterId) {
+		if (graph.getNodesByType(NodeType.WHITE).contains(filterId)) {
+			Object nodeObj = graph.getNodeObj(filterId);
+			if (nodeObj instanceof Simulatable<?>) {
+            	return ( Simulatable<?>)nodeObj;
+			}
+		}
 		return null;
 	}
 }
