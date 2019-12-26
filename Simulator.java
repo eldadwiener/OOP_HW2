@@ -3,6 +3,12 @@ package homework2;
 import java.util.Collection;
 import homework2.BipartiteGraph.NodeType;
 
+/*
+ * This class implements a simulator for a system of pipes-filters.
+ * Filters pass work-objects between one another via pipes.
+ * Each simulation step runs the simulate method of all pipes in the system, followed
+ * by all filters in the system.
+ */
 public class Simulator<T, Sim extends Simulatable<T>> {
 	
 	// Abs. Function:

@@ -24,7 +24,7 @@ public class Transaction {
 	/**
 	 * @effects Returns the amount of the transaction
 	 */
-    public double getAmount() {
+    public int getAmount() {
         return amount;
     }
     
