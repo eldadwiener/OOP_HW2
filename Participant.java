@@ -27,6 +27,11 @@ public class Participant implements Simulatable<String>{
 	private String id;
 	
 	
+	/**
+	 * @modifies this
+	 * @effects initializes a new participant with id,
+	 * 			and specific item type and amount needed.
+	 */
 	public Participant(String participantId, String itemNeeded, int amntNeeded) {
 		storageBuffer = new HashMap<>();
 		itemsNeeded = new HashMap<>();
@@ -36,6 +41,13 @@ public class Participant implements Simulatable<String>{
 	}
 	
 	
+	/**
+	 * @modifies this, graph
+	 * @effects performs a simulation step for this.
+	 * 			if the participant has an item to donate,
+	 * 			it will find the biggest channel available, and send
+	 * 			the items there.
+	 */
 	@Override
 	public void simulate(BipartiteGraph<String> graph) {
 		checkRep();
@@ -63,6 +75,10 @@ public class Participant implements Simulatable<String>{
 		checkRep();
 	}
 	
+	/**
+	 * @modifies this
+	 * @effects receive a transaction from a channel
+	 */
 	public void receiveTransaction(Transaction tx) {
 		checkRep();
 		int txAmnt = tx.getAmount();
