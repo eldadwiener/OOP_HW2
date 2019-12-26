@@ -35,7 +35,6 @@ public class BipartiteGraphTest {
     }
     
     
-    //  TODO: Add black-box tests
     
 	@Test
 	public void blackBoxDriverTest() {

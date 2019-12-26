@@ -116,10 +116,9 @@ public class Node<T> {
 		checkRep();
 	}
 
-	/** TODO: add documentation
-	 * @modifies
-	 * @effects 
-	 * @return 
+	/** 
+	 * @modifies this
+	 * @effects removes edgeId from child edges if such edge exists.
 	 */
 	public void removeChildEdge(T edgeId) {
 		checkRep();
@@ -127,10 +126,9 @@ public class Node<T> {
 		checkRep();
 	}
 
-	/** TODO: add documentation
-	 * @modifies
-	 * @effects 
-	 * @return 
+	/** 
+	 * @modifies this
+	 * @effects removes edgeId from parent edges if such edge exists.
 	 */
 	public void removeParentEdge(T edgeId) {
 		checkRep();
@@ -178,7 +176,6 @@ public class Node<T> {
 		return ingoingEdges.values();
 	}
 	
-	// TODO: what if edgeId is NULL?
 	/**
 	 * @return nodeId of child node connected by edgeId to this
 	 * 		   or null if no such edge exists.

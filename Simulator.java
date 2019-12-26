@@ -25,7 +25,6 @@ public class Simulator<T, Sim extends Simulatable<T>> {
 		checkRep();
 	}
 	
-	// TODO: is this good enough or do we need a better check for the casting?
 	/**
 	 * @modifies this
 	 * @effects runs a single round of the simulation.
