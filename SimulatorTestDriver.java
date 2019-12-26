@@ -83,6 +83,7 @@ public class SimulatorTestDriver {
 	 */
 	public void sendTransaction(String simName, String channelName, Transaction tx) {
         // TODO: Implement this method
+		// TODO: add support for this in Simulatable interface, and then in channel+participant
     }
 	
 	

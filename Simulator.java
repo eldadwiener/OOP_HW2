@@ -9,7 +9,7 @@ import homework2.BipartiteGraph.NodeType;
  * Each simulation step runs the simulate method of all pipes in the system, followed
  * by all filters in the system.
  */
-public class Simulator<T, Sim extends Simulatable<T>> {
+public class Simulator<T, WorkObj> {
 	
 	// Abs. Function:
 	// represents a Simulator with:
@@ -46,14 +46,14 @@ public class Simulator<T, Sim extends Simulatable<T>> {
 		for (T pipe : pipes) {
 			Object pipeObj = graph.getNodeObj(pipe);
 			if (pipeObj instanceof Simulatable<?>) {
-				((Sim)pipeObj).simulate(graph);
+				((Simulatable<T>)pipeObj).simulate(graph);
 			}
 		}
 
 		for (T filter : filters) {
 			Object filterObj = graph.getNodeObj(filter);
 			if (filterObj instanceof Simulatable<?>) {
-				((Sim)filterObj).simulate(graph);
+				((Simulatable<T>)filterObj).simulate(graph);
 			}
 		}
 		++round;
@@ -65,7 +65,7 @@ public class Simulator<T, Sim extends Simulatable<T>> {
 	 * @effects adds a pipe with id pipeId and object pipeObj to the simulator.
 	 * @return success/failure
 	 */
-	public boolean addPipe(T pipeId, Sim pipeObj) {
+	public boolean addPipe(T pipeId, Simulatable<T> pipeObj) {
 		checkRep();
 		boolean result = graph.addNode(pipeId, NodeType.BLACK, pipeObj);
 		checkRep();
@@ -77,7 +77,7 @@ public class Simulator<T, Sim extends Simulatable<T>> {
 	 * @effects adds a filter with id filterId and object filterObj to the simulator. 
 	 * @return success/failure
 	 */
-	public boolean addFilter(T filterId, Sim filterObj) {
+	public boolean addFilter(T filterId, Simulatable<T> filterObj) {
 		checkRep();
 		boolean result = graph.addNode(filterId, NodeType.WHITE, filterObj);
 		checkRep();
