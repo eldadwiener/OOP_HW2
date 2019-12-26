@@ -35,10 +35,22 @@ public class Transaction {
         return product;
     }
     
+	/**
+	 * @modifies this
+	 * @effects if newAmount > 0 change the amount and return true, otherwise return false 
+	 */
+    public boolean setAmount(int newAmount) {
+    	if (newAmount > 0) {
+    		amount = newAmount;
+    		return true;
+    	}
+        return false;
+    }
+    
     @Override
     public String toString() {
         return "Transaction: " + this.hashCode() + " Product: " + product + " Amount: " + amount;
     }
     
-    
+
 }
