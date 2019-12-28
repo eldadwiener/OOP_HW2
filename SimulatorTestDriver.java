@@ -1,6 +1,6 @@
 package homework2;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ public class SimulatorTestDriver {
 	 * @effects Constructs a new test driver.
 	 */
 	public SimulatorTestDriver() {
-        // TODO: Implement this constructor
+		simulators = new HashMap<>();
 	}
 
 	/**
@@ -28,7 +28,9 @@ public class SimulatorTestDriver {
 	 *          initially empty.
 	 */
 	public void createSimulator(String simName) {
-	    // TODO: Implement this method
+		if (!simulators.containsKey(simName)) {
+			simulators.put(simName, new Simulator<String, Transaction>());
+		}
 	}
 
 	/**
@@ -41,8 +43,9 @@ public class SimulatorTestDriver {
 	 * @effects Creates a new Channel named by the String channelName, with a limit, and add it to
 	 *          the simulator named simName.
 	 */
-	public void addChannel(String simName, String channelName, double limit) {
-	    // TODO: Implement this method
+	public void addChannel(String simName, String channelName, int limit) {
+		Simulator<String, Transaction> sim = simulators.get(simName);
+		sim.addPipe(channelName, new Channel(channelName, limit));
 	}
 
 	/**
@@ -56,7 +59,8 @@ public class SimulatorTestDriver {
 	 *          it to the simulator named simName.
 	 */
 	public void addParticipant(String simName, String participantName, String product, int amount) {
-        // TODO: Implement this method
+		Simulator<String, Transaction> sim = simulators.get(simName);
+		sim.addFilter(participantName, new Participant(participantName, product, amount));
 	}
 
 	/**
@@ -71,7 +75,8 @@ public class SimulatorTestDriver {
 	 *          is the String edgeLabel.
 	 */
 	public void addEdge(String simName, String parentName, String childName, String edgeLabel) {
-        // TODO: Implement this method
+		Simulator<String, Transaction> sim = simulators.get(simName);
+		sim.connect(edgeLabel, parentName, childName);
 	}
 
 	/**
@@ -82,8 +87,9 @@ public class SimulatorTestDriver {
 	 *          simulator named simName.
 	 */
 	public void sendTransaction(String simName, String channelName, Transaction tx) {
-        // TODO: Implement this method
-		// TODO: add support for this in Simulatable interface, and then in channel+participant
+		Simulator<String, Transaction> sim = simulators.get(simName);
+		Channel channel = (Channel)sim.getPipeObject(channelName);
+		channel.receiveTransaction(tx);
     }
 	
 	
@@ -93,7 +99,14 @@ public class SimulatorTestDriver {
 	 *         channel named channelName in the simulator named simName.
 	 */
 	public String listContents(String simName, String channelName) {
-        // TODO: Implement this method
+		Simulator<String, Transaction> sim = simulators.get(simName);
+		Channel channel = (Channel)sim.getPipeObject(channelName);
+		List<Transaction> transactions = channel.getTXList();
+		List<String> txValues = new ArrayList<>();
+		for (Transaction tx : transactions) {
+			txValues.add( Integer.toString(tx.getAmount()) );
+		}
+		return String.join(" ", txValues);
 	}
 
 
@@ -102,7 +115,14 @@ public class SimulatorTestDriver {
 	 * @return The sum of all Transaction amount of stored products that one has in his storage buffer.
 	 */
 	public double getParticipantStorageAmount(String simName, String participantName) {
-        // TODO: Implement this method
+		Simulator<String, Transaction> sim = simulators.get(simName);
+		Participant participant = (Participant)sim.getFilterObject(participantName);
+		Map<String, Integer> storageBuffer = participant.getStorageMap();
+		int sum = 0;
+		for ( int itemAmnt : storageBuffer.values()) {
+			sum += itemAmnt;
+		}
+		return sum;
 	}
 
 
@@ -111,7 +131,14 @@ public class SimulatorTestDriver {
 	 * @return The sum of all Transaction amount of waiting to be recycled products that one has.
 	 */
 	public double getParticipantToRecycleAmount(String simName, String participantName) {
-        // TODO: Implement this method
+		Simulator<String, Transaction> sim = simulators.get(simName);
+		Participant participant = (Participant)sim.getFilterObject(participantName);
+		Map<String, Integer> donationBuffer = participant.getDonationsMap();
+		int sum = 0;
+		for ( int itemAmnt : donationBuffer.values()) {
+			sum += itemAmnt;
+		}
+		return sum;
 	}
 
 
@@ -122,7 +149,8 @@ public class SimulatorTestDriver {
 	 * @effects runs simulator named simName for a single time slice.
 	 */
 	public void simulate(String simName) {
-        // TODO: Implement this method
+		Simulator<String, Transaction> sim = simulators.get(simName);
+		sim.simulate();
 	}
 
 	/**
@@ -132,7 +160,14 @@ public class SimulatorTestDriver {
 	 * @effects Prints the all edges.
 	 */
 	public void printAllEdges(String simName) {
-        // TODO: Implement this method
+        // TODO: Check if this prints the list correctly
+		Simulator<String, Transaction> sim = simulators.get(simName);
+		// print all pipes, and then all channels
+		List<String> edgeNames = new ArrayList<>();
+		edgeNames.addAll(sim.getPipesList());
+		edgeNames.addAll(sim.getFiltersList());
+		System.out.println(edgeNames);
+
 	}
 
 }

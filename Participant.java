@@ -15,15 +15,15 @@ public class Participant implements Simulatable<String>{
 
 	// Abs. Function:
 	// represents a participant with:
-	// 	a storageBuffer containing all items to be donated
-	// 	an itemsNeeded map, where for each entry:
+	// 	a donationsBuffer containing all items to be donated
+	// 	a storageBuffer map, where for each entry:
 	// 		the participants needs item "entry.getKey()" with amount "entry.getValue()"
 	// Rep. Invariant:
-	// 	for each pair: (entry1 in storageBuffer), (entry2 in itemsNeeded)
+	// 	for each pair: (entry1 in donationsBuffer), (entry2 in storageBuffer)
 	//		entry1.getKey() != entry2.getKey()
 
+	private Map<String, Integer> donationsBuffer;
 	private Map<String, Integer> storageBuffer;
-	private Map<String, Integer> itemsNeeded;
 	private String id;
 	
 	
@@ -33,10 +33,10 @@ public class Participant implements Simulatable<String>{
 	 * 			and specific item type and amount needed.
 	 */
 	public Participant(String participantId, String itemNeeded, int amntNeeded) {
+		donationsBuffer = new HashMap<>();
 		storageBuffer = new HashMap<>();
-		itemsNeeded = new HashMap<>();
 		id = participantId;
-		itemsNeeded.put(itemNeeded, amntNeeded);
+		storageBuffer.put(itemNeeded, amntNeeded);
 		checkRep();
 	}
 	
@@ -51,10 +51,10 @@ public class Participant implements Simulatable<String>{
 	@Override
 	public void simulate(BipartiteGraph<String> graph) {
 		checkRep();
-		if (storageBuffer.isEmpty()) {
+		if (donationsBuffer.isEmpty()) {
 			return;
 		}
-		Map.Entry<String, Integer> toDonate = storageBuffer.entrySet().iterator().next();
+		Map.Entry<String, Integer> toDonate = donationsBuffer.entrySet().iterator().next();
 		Collection<String> channels = graph.getListChildren(id);
 		Channel biggestChannel = null; 
 		for (String channel : channels) {
@@ -70,7 +70,7 @@ public class Participant implements Simulatable<String>{
 		// if the biggest channel found has room, send the donation to it.
 		if (biggestChannel.storageAvailable() != 0) {
 			biggestChannel.receiveTransaction(new Transaction(toDonate.getKey(), toDonate.getValue()));
-			storageBuffer.remove(toDonate.getKey());
+			donationsBuffer.remove(toDonate.getKey());
 		}
 		checkRep();
 	}
@@ -84,30 +84,46 @@ public class Participant implements Simulatable<String>{
 		int txAmnt = tx.getAmount();
 		String txProduct = tx.getProduct();
 		// if item is needed first try to fill in the need
-		if ( itemsNeeded.containsKey(txProduct) ) {
-			int amntNeeded = itemsNeeded.get(txProduct);
+		if ( storageBuffer.containsKey(txProduct) ) {
+			int amntNeeded = storageBuffer.get(txProduct);
 			if (amntNeeded < txAmnt) {
-				itemsNeeded.put(txProduct, amntNeeded - txAmnt);
+				storageBuffer.put(txProduct, amntNeeded - txAmnt);
 			}
 			else {
 				txAmnt -= amntNeeded;
-				itemsNeeded.remove(txProduct);
+				storageBuffer.remove(txProduct);
 			}
 		}
 		
 		// if more is left after filling the needs, add to buffer
 		if ( txAmnt > 0) {
-			if (storageBuffer.containsKey(txProduct)) {
-				txAmnt += storageBuffer.get(txProduct);
+			if (donationsBuffer.containsKey(txProduct)) {
+				txAmnt += donationsBuffer.get(txProduct);
 			}
-			storageBuffer.put(txProduct, txAmnt);
+			donationsBuffer.put(txProduct, txAmnt);
 		}
 		checkRep();
 	}
 
+	//TODO : add javaDoc
+	public Map<String, Integer> getStorageMap() {
+		checkRep();
+		Map<String,Integer> newList = new HashMap<>(storageBuffer);
+		checkRep();
+		return newList;
+	}
+
+	//TODO : add javaDoc
+	public Map<String, Integer> getDonationsMap() {
+		checkRep();
+		Map<String,Integer> newList = new HashMap<>(donationsBuffer);
+		checkRep();
+		return newList;
+	}
+
 	private void checkRep() {
-		Set<String> storedItems = storageBuffer.keySet();	
-		Set<String> neededItems = itemsNeeded.keySet();
+		Set<String> storedItems = donationsBuffer.keySet();	
+		Set<String> neededItems = storageBuffer.keySet();
 		for (String neededItem : neededItems) {
 			assert !storedItems.contains(neededItem) : "Item both in storage and is required";
 		}

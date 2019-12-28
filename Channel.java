@@ -119,6 +119,15 @@ public class Channel implements Simulatable<String> {
 		return (limitWeight - currentWeight);
 	}
 	
+	/*
+	 * @return a list of copies of all transactions contained in the channel.
+	 */
+	public List<Transaction> getTXList() {
+		checkRep();
+		List<Transaction> transactions = new ArrayList<>(transList);
+		checkRep();
+		return transactions;
+	}
 	
 	private void checkRep() {
 		assert limitWeight > 0 : "limitWeight <= 0";

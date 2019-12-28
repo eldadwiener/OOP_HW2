@@ -1,6 +1,8 @@
 package homework2;
 
 import java.util.Collection;
+import java.util.List;
+
 import homework2.BipartiteGraph.NodeType;
 
 /*
@@ -165,6 +167,18 @@ public class Simulator<T, WorkObj> {
 		return null;
 	}
 	
+	// TODO: javadoc
+	public List<T> getPipesList() {
+		checkRep();
+		return graph.getNodesByType(NodeType.BLACK);
+	}
+	
+	// TODO: javadoc
+	public List<T> getFiltersList() {
+		checkRep();
+		return graph.getNodesByType(NodeType.WHITE);
+	}
+
 	private void checkRep() {
 		assert round>=0 : "Negative round number";
 	}
