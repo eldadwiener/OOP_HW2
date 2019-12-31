@@ -118,6 +118,7 @@ public class BipartiteGraphTest {
 	@Test
 	public void BipartiteGraphTest4() {
 		BipartiteGraph<String> graph = new BipartiteGraph<>();
+		graph.addNode("b1", NodeType.BLACK, "blackNode1");
         graph.addEdge("nah", "b1", "nope");
         graph.addEdge("nun", "stillNope", "b1");
         assertNull("connected to non-existent edge", graph.getChildByEdgeLabel("b1", "nah"));
