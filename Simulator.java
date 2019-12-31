@@ -167,16 +167,24 @@ public class Simulator<T, WorkObj> {
 		return null;
 	}
 	
-	// TODO: javadoc
+	/**
+	 * @return a list of all pipes in the simulator
+	 */
 	public List<T> getPipesList() {
 		checkRep();
-		return graph.getNodesByType(NodeType.BLACK);
+		List<T> nodes = graph.getNodesByType(NodeType.BLACK);
+		checkRep();
+		return nodes;
 	}
 	
-	// TODO: javadoc
+	/**
+	 * @return a list of all filters in the simulator
+	 */
 	public List<T> getFiltersList() {
 		checkRep();
-		return graph.getNodesByType(NodeType.WHITE);
+		List<T> nodes = graph.getNodesByType(NodeType.WHITE);
+		checkRep();
+		return nodes;
 	}
 
 	private void checkRep() {

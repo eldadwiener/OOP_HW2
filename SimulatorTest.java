@@ -9,7 +9,8 @@ import org.junit.Test;
  */
 public class SimulatorTest {
 
-	//check the main flow of SimulatorTestDriver
+	// check basic channel functionality, 
+	// send transactions and see if it reacts properly.
 	@Test
     public void SimulatorTestDriverTest1() {
 		SimulatorTestDriver sim = new SimulatorTestDriver();
@@ -19,14 +20,13 @@ public class SimulatorTest {
 		//add channel
 		sim.addChannel("sim1", "chann0", 1000);
 		
-		// pushes transactions into the initial channel
-		
-		//less than required
+		// push transactions into the channel
+		// less than max
 		Transaction tx0 = new Transaction ("BANANAS", 100);
-		//more  than required
 		Transaction tx1 = new Transaction ("SOCKS", 700);
+		// this will exceed max, only 100 should fit
 		Transaction tx2 = new Transaction ("IPHONES", 200);
-		//not required
+		// will not fit at all
 		Transaction tx3 = new Transaction ("COWS", 50);
 		
 		sim.sendTransaction("sim1","chann0", tx0);
@@ -45,6 +45,8 @@ public class SimulatorTest {
 		assertEquals("wrong contents list","100 700 200",sim.listContents("sim1", "chann0"));
     }
 	
+	// Connect a single channel to multiple participants,
+	// make sure a transaction will go to exactly one participant.
 	@Test
     public void SimulatorTestDriverTest2() {
 		SimulatorTestDriver sim = new SimulatorTestDriver();
@@ -87,6 +89,7 @@ public class SimulatorTest {
 		assertEquals("wrong amount at the total recycle list", 10, sum);
     }
 	
+	// make sure a transaction stays in the channel if it has no where to send it to.
 	@Test
     public void SimulatorTestDriverTest3() {
 		SimulatorTestDriver sim = new SimulatorTestDriver();
@@ -115,6 +118,8 @@ public class SimulatorTest {
 		assertEquals("wrong contents list","10",sim.listContents("sim1", "chann0"));
 	}
 	
+	// send a transaction from a large channel, through a participant,
+	// to a smaller channel, and see if it was partially passed (and the rest deleted)
 	@Test
     public void SimulatorTestDriverTest4() {
 		SimulatorTestDriver sim = new SimulatorTestDriver();
@@ -151,9 +156,9 @@ public class SimulatorTest {
 		
     }
 	
-	//check the main flow of SimulatorTestDriver
-		@Test
-    public void SimulatorTestDriverTest45() {
+	//check the full flow
+	@Test
+    public void SimulatorTestDriverTest5() {
 		SimulatorTestDriver sim = new SimulatorTestDriver();
         //create the simulator
 		sim.createSimulator("sim1");
@@ -209,4 +214,10 @@ public class SimulatorTest {
 		assertEquals("wrong contents list","",sim.listContents("sim1", "chann1"));
 		assertEquals("wrong contents list","",sim.listContents("sim1", "chann2"));
     }
+
+	//
+	@Test
+	public void SimulatorTest1() {
+		Simulator<String, Transaction> sim = new Simulator<>();
+	}
 }

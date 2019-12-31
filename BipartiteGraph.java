@@ -39,7 +39,7 @@ public class BipartiteGraph<T> {
 	 */
 	public boolean addNode (T nodeId, NodeType type, Object obj) {
 		checkRep();
-		if ( nodes.containsKey(nodeId)) {
+		if ( nodeId == null || type == null || nodes.containsKey(nodeId) ) {
 			return false;
 		}
 		nodes.put(nodeId, new Node<T>(nodeId, type,obj));
@@ -60,7 +60,7 @@ public class BipartiteGraph<T> {
 		checkRep();
 		Node<T> srcNode = nodes.get(srcNodeId);
 		Node<T> dstNode = nodes.get(dstNodeId);
-		if (srcNode == null || dstNode == null) {
+		if (edgeId == null || srcNode == null || dstNode == null) {
 			checkRep();
 			return false;
 		}

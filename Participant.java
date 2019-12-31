@@ -33,6 +33,7 @@ public class Participant implements Simulatable<String>{
 	
 	
 	/**
+	 * @requires participantId != null, itemNeeded != null, amntNeeded > 0
 	 * @modifies this
 	 * @effects initializes a new participant with id,
 	 * 			and specific item type and amount needed.
@@ -48,6 +49,7 @@ public class Participant implements Simulatable<String>{
 	
 	
 	/**
+	 * @requires graph != null
 	 * @modifies this, graph
 	 * @effects performs a simulation step for this.
 	 * 			if the participant has an item to donate,
@@ -82,11 +84,15 @@ public class Participant implements Simulatable<String>{
 	}
 	
 	/**
+	 * @requires pipeId != null, pipeObj != null
 	 * @modifies this
 	 * @effects receive a transaction from a channel
 	 */
 	public void receiveTransaction(Transaction tx) {
 		checkRep();
+		if (tx == null) {
+			return;
+		}
 		int txAmnt = tx.getAmount();
 		String txProduct = tx.getProduct();
 		// if item is needed first try to fill in the need
