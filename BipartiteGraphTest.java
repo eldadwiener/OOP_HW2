@@ -179,6 +179,7 @@ public class BipartiteGraphTest {
 		
 		graph.addEdge("b2w", "b1", "w1");
         graph.addEdge("b2w", "b2", "w2");
+        assertEquals("same name edge different src-dst", "w1", graph.getChildByEdgeLabel("b1", "b2w"));
         assertEquals("same name edge different src-dst", "w2", graph.getChildByEdgeLabel("b2", "b2w"));
 	}
 }
