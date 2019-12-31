@@ -40,6 +40,7 @@ public class Node<T> {
 	private Map<T,T> outgoingEdges = new HashMap<>();
 
 	/**
+	 * @requires id != null
 	 * @modifies this
 	 * @effects creates a new node with label = id, of type = type containing the object obj
 	 */
@@ -58,6 +59,9 @@ public class Node<T> {
 	 */
 	public boolean insertChildEdge(T edgeId, T childId) {
 		checkRep();
+		if (edgeId == null || childId == null) {
+			return false;
+		}
 		if ( outgoingEdges.containsKey(edgeId) || outgoingEdges.containsValue(childId) ) {
 			checkRep();
 			return false;
@@ -75,6 +79,9 @@ public class Node<T> {
 	 */
 	public boolean insertParentEdge(T edgeId, T parentId) {
 		checkRep();
+		if (edgeId == null || parentId == null) {
+			return false;
+		}
 		if ( ingoingEdges.containsKey(edgeId) || ingoingEdges.containsValue(parentId)) {
 			checkRep();
 			return false;
@@ -90,6 +97,9 @@ public class Node<T> {
 	 */
 	public void removeChild(T childId) {
 		checkRep();
+		if (childId == null) {
+			return;
+		}
 		for (Map.Entry<T, T> child : outgoingEdges.entrySet()) {
 			if (child.getValue().equals(childId)) {
 				outgoingEdges.remove(child.getKey());
@@ -106,6 +116,9 @@ public class Node<T> {
 	 */
 	public void removeParent(T parentId) {
 		checkRep();
+		if (parentId == null) {
+			return;
+		}
 		for (Map.Entry<T, T> parent : ingoingEdges.entrySet()) {
 			if (parent.getValue().equals(parentId)) {
 				ingoingEdges.remove(parent.getKey());
@@ -122,6 +135,9 @@ public class Node<T> {
 	 */
 	public void removeChildEdge(T edgeId) {
 		checkRep();
+		if (edgeId == null) {
+			return;
+		}
 		outgoingEdges.remove(edgeId);
 		checkRep();
 	}
@@ -132,6 +148,9 @@ public class Node<T> {
 	 */
 	public void removeParentEdge(T edgeId) {
 		checkRep();
+		if (edgeId == null) {
+			return;
+		}
 		ingoingEdges.remove(edgeId);
 		checkRep();
 	}
@@ -217,6 +236,9 @@ public class Node<T> {
 	@Override
 	public boolean equals(Object obj) {
 		checkRep();
+		if (obj == null) {
+			return false;
+		}
 		if (obj instanceof Node<?>) {
 			if (((Node<?>)obj).id == id) {
 				checkRep();

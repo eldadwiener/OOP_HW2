@@ -33,6 +33,7 @@ public class Channel implements Simulatable<String> {
 	private String channelId;
 	
 	/**
+	 * @requires id != null, limit > 0
 	 * @modifies this
 	 * @effects creates a new Channel with: id, limit-Weight, current amount = 0 and empty transactions list
 	 */
@@ -45,6 +46,7 @@ public class Channel implements Simulatable<String> {
 	}
 	
 	/**
+	* @requires graph != null
 	* @modifies this
 	* @effects chose a (randomly) transaction and child and pass the transaction to the child
 	*/
@@ -88,6 +90,7 @@ public class Channel implements Simulatable<String> {
 	}
 	
 	/**
+	 * @requires trans != null
 	 * @modifies this
 	 * @effects add new transaction to the transactions list of the channel
 	 * @return the true amount that consumed from the transaction 
