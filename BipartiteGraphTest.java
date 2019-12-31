@@ -36,6 +36,8 @@ public class BipartiteGraphTest {
     
     
     
+	// test the BipartiteGraph using the test driver
+	// try adding nodes and connecting edges, make sure the graph state is correct.
 	@Test
 	public void BipartiteGraphTestDriverTest1() {
         BipartiteGraphTestDriver driver = new BipartiteGraphTestDriver();
@@ -46,6 +48,9 @@ public class BipartiteGraphTest {
         driver.addWhiteNode("graph1", "w1");
         driver.addWhiteNode("graph1", "w2");
 
+        assertEquals("addBlackNode failed", "b1 b2", driver.listBlackNodes("graph1"));
+        assertEquals("addWhitWhite failed", "w1 w2", driver.listWhiteNodes("graph1"));
+
         driver.addEdge("graph1", "b1", "w1", "b2w");
         assertEquals("addEdge failed", "w1", driver.listChildren("graph1", "b1") );
         assertEquals("addEdge failed", "b1", driver.listParents("graph1", "w1") );
@@ -53,19 +58,21 @@ public class BipartiteGraphTest {
         // connect in and out edges with same name
         driver.addEdge("graph1", "w1", "b1", "b2w");
         assertEquals("in and out same name failed","b1" , driver.getChildByEdgeLabel("graph1", "w1", "b2w"));
+        assertEquals("in and out same name failed","w1" , driver.getParentByEdgeLabel("graph1", "b1", "b2w"));
         
         // same name edge different src and dst
         driver.addEdge("graph1", "b2", "w2", "b2w");
         assertEquals("same name edge different src-dst", "w2", driver.getChildByEdgeLabel("graph1", "b2", "b2w"));
+        assertEquals("same name edge different src-dst", "b2", driver.getParentByEdgeLabel("graph1", "w2", "b2w"));
 	}
 
+	// tests without test driver
+	// try connecting an edge, see if it exists, and if both sides are aware of it.
 	@Test
 	public void BipartiteGraphTest1() {
 		BipartiteGraph<String> graph = new BipartiteGraph<>();
 		graph.addNode("b1", NodeType.BLACK, "blackNode1");
-		graph.addNode("b2", NodeType.BLACK, "blackNode2");
 		graph.addNode("w1", NodeType.WHITE, "whiteNode1");
-		graph.addNode("w2", NodeType.WHITE, "whiteNode2");
 		
 		graph.addEdge("b2w", "b1", "w1");
 		
