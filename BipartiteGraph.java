@@ -226,8 +226,12 @@ public class BipartiteGraph<T> {
 			checkRep();
 			return null;
 		}
+		Collection<T> children = node.getAllChildren();
+		if (children.isEmpty()) {
+			children = null;
+		}
 		checkRep();
-		return node.getAllChildren();
+		return children;
 	}
 	
 	/**
@@ -242,8 +246,12 @@ public class BipartiteGraph<T> {
 			checkRep();
 			return null;
 		}
+		Collection<T> parents = node.getAllParents();
+		if (parents.isEmpty()) {
+			parents = null;
+		}
 		checkRep();
-		return node.getAllParents();
+		return parents;
 	}
 	
 	private void checkRep() {

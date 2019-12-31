@@ -81,7 +81,7 @@ public class Channel implements Simulatable<String> {
 		
 		Transaction deliverdTrans = transList.get(0);
 		transList.remove(deliverdTrans);
-		
+		currentWeight -= deliverdTrans.getAmount();
 		child.receiveTransaction(deliverdTrans);
 		checkRep();
 

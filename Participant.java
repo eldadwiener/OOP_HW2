@@ -57,7 +57,7 @@ public class Participant implements Simulatable<String>{
 	@Override
 	public void simulate(BipartiteGraph<String> graph) {
 		checkRep();
-		if (donationsBuffer.isEmpty()) {
+		if (donationsBuffer.isEmpty() || (graph.getListChildren(id) == null)) {
 			return;
 		}
 		Map.Entry<String, Integer> toDonate = donationsBuffer.entrySet().iterator().next();
