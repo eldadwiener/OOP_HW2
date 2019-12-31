@@ -33,9 +33,8 @@ public class Channel implements Simulatable<String> {
 	private String channelId;
 	
 	/**
-	 * 
-	 * @param id
-	 * @param limit
+	 * @modifies this
+	 * @effects creates a new Channel with: id, limit-Weight, current amount = 0 and empty transactions list
 	 */
 	public Channel(String id, int limit) {
 		channelId = id;
@@ -46,7 +45,8 @@ public class Channel implements Simulatable<String> {
 	}
 	
 	/**
-	* 
+	* @modifies this
+	* @effects chose a (randomly) transaction and child and pass the transaction to the child
 	*/
 	@Override
 	public void simulate(BipartiteGraph<String> graph) {
@@ -88,9 +88,9 @@ public class Channel implements Simulatable<String> {
 	}
 	
 	/**
-	 * 
-	 * @param trans
-	 * @return
+	 * @modifies this
+	 * @effects add new transaction to the transactions list of the channel
+	 * @return the true amount that consumed from the transaction 
 	 */
 	public int receiveTransaction (Transaction trans) {
 		checkRep();
@@ -111,15 +111,16 @@ public class Channel implements Simulatable<String> {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * @effects get the available amount of the channel
+	 * @return the available amount of the channel
 	 */
 	public int storageAvailable() {
 		checkRep();
 		return (limitWeight - currentWeight);
 	}
 	
-	/*
+	/**
+	 * @effects get all of the channel's transactions 
 	 * @return a list of copies of all transactions contained in the channel.
 	 */
 	public List<Transaction> getTXList() {
