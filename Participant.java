@@ -3,7 +3,6 @@ package homework2;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /*
  * This class implements a participant in a filters-pipes system.
@@ -19,11 +18,17 @@ public class Participant implements Simulatable<String>{
 	// 	a storageBuffer map, where for each entry:
 	// 		the participants needs item "entry.getKey()" with amount "entry.getValue()"
 	// Rep. Invariant:
-	// 	for each pair: (entry1 in donationsBuffer), (entry2 in storageBuffer)
-	//		entry1.getKey() != entry2.getKey()
+	//	if itemNeededAmnt > 0, then donationsBuffer.containskey(itemNeeded) == false
+	//	itemNeededAmnt >= 0
+	//	storageBuffer  >= 0
+	//	storageBuffer + itemNeededAmnt > 0
+	//	itemNeeded != null
+	
 
 	private Map<String, Integer> donationsBuffer;
-	private Map<String, Integer> storageBuffer;
+	private int storageBuffer;
+	private int itemNeededAmnt;
+	private String itemNeeded;
 	private String id;
 	
 	
@@ -34,9 +39,10 @@ public class Participant implements Simulatable<String>{
 	 */
 	public Participant(String participantId, String itemNeeded, int amntNeeded) {
 		donationsBuffer = new HashMap<>();
-		storageBuffer = new HashMap<>();
 		id = participantId;
-		storageBuffer.put(itemNeeded, amntNeeded);
+		storageBuffer = 0;
+		itemNeededAmnt = amntNeeded;
+		this.itemNeeded = itemNeeded;
 		checkRep();
 	}
 	
@@ -84,14 +90,16 @@ public class Participant implements Simulatable<String>{
 		int txAmnt = tx.getAmount();
 		String txProduct = tx.getProduct();
 		// if item is needed first try to fill in the need
-		if ( storageBuffer.containsKey(txProduct) ) {
-			int amntNeeded = storageBuffer.get(txProduct);
-			if (amntNeeded < txAmnt) {
-				storageBuffer.put(txProduct, amntNeeded - txAmnt);
+		if ( txProduct.equals(itemNeeded) && itemNeededAmnt > 0) {
+			if (itemNeededAmnt < txAmnt) {
+				storageBuffer += itemNeededAmnt;
+				txAmnt -= itemNeededAmnt;
+				itemNeededAmnt = 0;
 			}
 			else {
-				txAmnt -= amntNeeded;
-				storageBuffer.remove(txProduct);
+				storageBuffer += txAmnt;
+				itemNeededAmnt -= txAmnt;
+				txAmnt = 0;
 			}
 		}
 		
@@ -105,15 +113,22 @@ public class Participant implements Simulatable<String>{
 		checkRep();
 	}
 
-	//TODO : add javaDoc
+	/**
+	 * @effects get a map of all items required by this participant.
+	 * @return map of needed items and needed amounts.
+	 */
 	public Map<String, Integer> getStorageMap() {
 		checkRep();
-		Map<String,Integer> newList = new HashMap<>(storageBuffer);
+		Map<String,Integer> storageMap = new HashMap<>();
+		storageMap.put(itemNeeded, storageBuffer);
 		checkRep();
-		return newList;
+		return storageMap;
 	}
 
-	//TODO : add javaDoc
+	/**
+	 * @effects get a map of all items ready to be donated by this participant.
+	 * @return map of donation items and amounts.
+	 */
 	public Map<String, Integer> getDonationsMap() {
 		checkRep();
 		Map<String,Integer> newList = new HashMap<>(donationsBuffer);
@@ -122,10 +137,12 @@ public class Participant implements Simulatable<String>{
 	}
 
 	private void checkRep() {
-		Set<String> storedItems = donationsBuffer.keySet();	
-		Set<String> neededItems = storageBuffer.keySet();
-		for (String neededItem : neededItems) {
-			assert !storedItems.contains(neededItem) : "Item both in storage and is required";
+		assert (itemNeededAmnt >= 0) : "Negative item amnt needed";
+		assert (storageBuffer >= 0) : "Negative storageBuffer";
+		assert (itemNeededAmnt + storageBuffer > 0) : "Participant item requirement not positive";
+		assert (itemNeeded != null) : "itemNeeded is null";
+		if (itemNeededAmnt > 0) {
+			assert !donationsBuffer.containsKey(itemNeeded) : "Item in donationsBuffer but is required";
 		}
 	}
 }
