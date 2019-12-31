@@ -215,9 +215,44 @@ public class SimulatorTest {
 		assertEquals("wrong contents list","",sim.listContents("sim1", "chann2"));
     }
 
-	//
+	// check add/remove methods of Simulator
 	@Test
 	public void SimulatorTest1() {
 		Simulator<String, Transaction> sim = new Simulator<>();
+		sim.addFilter("channel1", new Channel("c1", 100));
+		sim.addFilter("channel2", new Channel("c2", 200));
+		sim.addPipe("pipe1", new Participant("p1", "CORN", 100));
+		sim.addPipe("pipe2", new Participant("p2", "CANDYCORN", 100));
+		
+		assertEquals("fail in addFilter", "[channel1, channel2]",sim.getFiltersList().toString());
+		assertEquals("fail in addPipe", "[pipe1, pipe2]",sim.getPipesList().toString());
+		
+		// remove c2 and p2 and check again
+		sim.removeFilter("channel2");
+		sim.removePipe("pipe2");
+		assertEquals("fail in removeFilter", "[channel1]",sim.getFiltersList().toString());
+		assertEquals("fail in removePipe", "[pipe1]",sim.getPipesList().toString());
+		
+		// check connect/disconnect
+		sim.connect("c1p1", "channel1", "pipe1");
+		assertEquals("channel1 to pipe1 connection failed", "[pipe1]", sim.getListChildren("channel1").toString());
+		assertEquals("channel1 to pipe1 connection failed", "[channel1]", sim.getListParents("pipe1").toString());
+		sim.disconnect("channel1", "pipe1");
+		assertNull("channel1 to pipe1 disconnection failed", sim.getListChildren("channel1"));
+		assertNull("channel1 to pipe1 disconnection failed", sim.getListParents("pipe1"));
+		
+	}
+	
+	// check testDriver assumptions which are not required by Simulator
+	@Test
+	public void SimulatorTest2() {
+		Simulator<String, Transaction> sim = new Simulator<>();
+		assertTrue("failed to insert viable filter", sim.addFilter("channel1", new Channel("c1", 100)));
+		assertFalse("added 2 filters with same name", sim.addFilter("channel1", new Channel("c2", 200)));
+		assertTrue("failed to insert viable pipe", sim.addPipe("pipe1", new Participant("p1", "CORN", 100)));
+		assertFalse("added 2 pipes with the same name", sim.addPipe("pipe1", new Participant("p2", "CANDYCORN", 100)));
+		assertFalse("added a pipe and channel with the same name", sim.addPipe("channel1", new Participant("p3", "SUGAR", 100)));
+		assertNull("getFilterObj with null id did not return null", sim.getFilterObject(null));
+		assertNull("getPipeObj with null id did not return null", sim.getPipeObject(null));
 	}
 }

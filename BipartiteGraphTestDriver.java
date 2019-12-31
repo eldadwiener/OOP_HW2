@@ -123,9 +123,13 @@ public class BipartiteGraphTestDriver {
      */
     public String listChildren(String graphName, String parentName) {
     	BipartiteGraph<String> graph = graphs.get(graphName);
-    	List<String> childrenList = new ArrayList<>(graph.getListChildren(parentName));
-    	Collections.sort(childrenList);
-    	return String.join(" ", childrenList);
+    	Collection<String> childrenList = graph.getListChildren(parentName);
+    	if (childrenList == null) {
+    		return "";
+    	}
+    	List<String> sortedChildrenList = new ArrayList<>(childrenList);
+    	Collections.sort(sortedChildrenList);
+    	return String.join(" ", sortedChildrenList);
     }
 
     
@@ -136,9 +140,13 @@ public class BipartiteGraphTestDriver {
      */
     public String listParents(String graphName, String childName) {
        	BipartiteGraph<String> graph = graphs.get(graphName);
-    	List<String> parentsList = new ArrayList<>(graph.getListParents(childName));
-    	Collections.sort(parentsList);
-    	return String.join(" ", parentsList);
+    	Collection<String> parentsList = graph.getListParents(childName);
+    	if (parentsList == null) {
+    		return "";
+    	}
+    	List<String> sortedParentsList = new ArrayList<>(parentsList);
+    	Collections.sort(sortedParentsList);
+    	return String.join(" ", sortedParentsList);
     }
 
     

@@ -115,7 +115,7 @@ public class Simulator<T, WorkObj> {
 	 * @modifies this
 	 * @effects  remove the filter with filterId label (if exist)
 	 */
-	public void removeFIlter(T filterId) {
+	public void removeFilter(T filterId) {
 		checkRep();
 		if (graph.getNodesByType(NodeType.WHITE).contains(filterId)) {
 			graph.removeNode(filterId);
@@ -187,6 +187,23 @@ public class Simulator<T, WorkObj> {
 		return nodes;
 	}
 
+	/**
+	 * @return list of all children of srcId if it exists.
+	 * 			will return null if srcId is null or not in the simulation.
+	 */
+	public Collection<T> getListChildren(T srcId) {
+		return graph.getListChildren(srcId);
+	}
+	
+	/**
+	 * @return list of all parents of srcId if it exists.
+	 * 			will return null if srcId is null or not in the simulation.
+	 */
+	public Collection<T> getListParents(T srcId) {
+		return graph.getListParents(srcId);
+	}
+	
+	
 	private void checkRep() {
 		assert round>=0 : "Negative round number";
 	}

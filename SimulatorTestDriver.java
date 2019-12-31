@@ -160,7 +160,6 @@ public class SimulatorTestDriver {
 	 * @effects Prints the all edges.
 	 */
 	public void printAllEdges(String simName) {
-        // TODO: Check if this prints the list correctly
 		Simulator<String, Transaction> sim = simulators.get(simName);
 		// print all pipes, and then all channels
 		List<String> edgeNames = new ArrayList<>();
