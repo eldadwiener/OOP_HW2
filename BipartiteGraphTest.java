@@ -125,16 +125,22 @@ public class BipartiteGraphTest {
         assertNull("connected to non-existent edge", graph.getParentByEdgeLabel("b1", "nun"));
 	}
 	
-	// connect 2 edges with same id
+	// connect 2 edges with same id (ingoing and outgoing)
 	@Test
 	public void BipartiteGraphTest5() {
 		BipartiteGraph<String> graph = new BipartiteGraph<>();
 		graph.addNode("b1", NodeType.BLACK, "blackNode1");
+		graph.addNode("b2", NodeType.BLACK, "blackNode2");
 		graph.addNode("w1", NodeType.WHITE, "whiteNode1");
+		graph.addNode("w2", NodeType.WHITE, "whiteNode2");
 		
 		graph.addEdge("b2w", "b1", "w1");
         graph.addEdge("b2w", "b1", "w2");
+        graph.addEdge("b2w", "b2", "w1");
+        // outgoing conflict
         assertNull("2 edges same id", graph.getParentByEdgeLabel("w2", "b2w") );
+        // ingoing conflict
+        assertNull("2 edges same id", graph.getChildByEdgeLabel("b2", "b2w") );
 	}
 	
 	// connect in and out edges with same name
